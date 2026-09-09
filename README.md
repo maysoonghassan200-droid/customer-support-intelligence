@@ -131,11 +131,26 @@ The backend is built with **FastAPI**.
 
 ### Endpoints
 
-#### Health Check
+#### Home
 
 ```http
 GET /
 ```
+
+Confirms that the Customer Support API is running.
+
+#### System Health
+
+```http
+GET /health
+```
+
+Returns:
+
+- API connection status
+- Vector store status
+- Number of FAISS vectors
+- Number of knowledge-base chunks
 
 #### Ticket Triage
 
@@ -154,7 +169,7 @@ Predicts:
 POST /chat
 ```
 
-Runs:
+Runs the complete support pipeline:
 
 ```text
 Conversation Context
@@ -168,10 +183,43 @@ Gemini Generation
 Final Support Response
 ```
 
+#### System Statistics
+
+```http
+GET /stats
+```
+
+Returns project information including:
+
+- Total tickets
+- Knowledge-base chunks
+- FAISS vectors
+- Number of support queues
+- Queue classification model
+- Priority classification model
+- Embedding model
+- LLM
+
+#### Ticket Preview
+
+```http
+GET /tickets?limit=10
+```
+
+Returns a preview of ticket information including:
+
+- Ticket ID
+- Queue
+- Priority
+
+The requested limit is restricted to a range of **1–100 tickets**.
+
+### Swagger Documentation
+
 Interactive API documentation is available through FastAPI Swagger UI at:
 
 ```text
-http://127.0.0.1:8010/docs
+http://localhost:8010/docs
 ```
 
 ## Frontend
@@ -214,7 +262,7 @@ customer-support-intelligence/
 
 ## Run Locally
 
-### 1. Install backend dependencies
+### 1. Install Backend Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -228,13 +276,13 @@ Create a `.env` file in the project root:
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-### 3. Start the backend
+### 3. Start the Backend
 
 ```bash
 uvicorn main:app --host 127.0.0.1 --port 8010
 ```
 
-### 4. Start the frontend
+### 4. Start the Frontend
 
 Open another terminal:
 
@@ -252,7 +300,7 @@ http://localhost:5173
 
 ## Docker
 
-The entire application can also be started using Docker Compose:
+The entire application can be started using Docker Compose:
 
 ```bash
 docker compose up --build
@@ -289,8 +337,12 @@ The `.env` file is excluded through `.gitignore`, while `.env.example` documents
 - Semantic retrieval from historical support tickets
 - Gemini-powered response generation
 - Conversation-aware follow-up handling
+- System health monitoring
+- Project statistics endpoint
+- Ticket preview endpoint
 - FastAPI REST API
-- Interactive React dashboard
+- Interactive Swagger documentation
+- React dashboard
 - Dockerized application
 - Secure environment variable management
 
