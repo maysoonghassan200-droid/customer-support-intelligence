@@ -254,6 +254,15 @@ def home():
         "message": "Customer Support API is running"
     }
 
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy",
+        "api": "connected",
+        "vector_store": "connected",
+        "faiss_vectors": index.ntotal,
+        "knowledge_base_chunks": len(chunks_df)
+    }
 
 @app.post("/triage")
 def triage_endpoint(request: TriageRequest):
@@ -268,3 +277,18 @@ def chat_endpoint(request: ChatRequest):
         request.session_id,
         request.message
     )
+
+@app.get("/stats")
+def stats():
+    return {
+        "total_tickets": 8000,
+        "knowledge_base_chunks": len(chunks_df),
+        "faiss_vectors": index.ntotal,
+        "queues": 10,
+        "models": {
+            "queue_classifier": "TF-IDF + Logistic Regression",
+            "priority_classifier": "TF-IDF + Logistic Regression",
+            "embedding_model": "all-MiniLM-L6-v2",
+            "llm": "Gemini 3.6 Flash"
+        }
+    }
