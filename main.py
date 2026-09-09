@@ -292,3 +292,21 @@ def stats():
             "llm": "Gemini 3.6 Flash"
         }
     }
+
+@app.get("/tickets")
+def tickets_endpoint(limit: int = 10):
+    limit = max(1, min(limit, 100))
+
+    tickets = (
+        chunks_df[
+            ["ticket_id", "queue", "priority"]
+        ]
+        .drop_duplicates(subset=["ticket_id"])
+        .head(limit)
+        .to_dict(orient="records")
+    )
+
+    return {
+        "total": len(tickets),
+        "tickets": tickets
+    }
